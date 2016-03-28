@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title>swagger-page sample w/ bootstrap4(alpha)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <style type="text/css">
+      pre{background:#fff;}
+      dd{margin-bottom:.5em;}
+      .spec{padding:9px 14px;border-radius:4px;margin-bottom:1em;}
+      .spec.api.GET{background:#e7f0f7;border:1px solid #c3d9ec;}
+      .spec.api.POST{background:#e7f6ec;border:1px solid #c3e8d1;}
+      .spec.api.PUT{background:#ffefe0;border:1px solid #ffdfe0;}
+      .spec.api.DELETE{background:#f0f0f0;border:1px solid #d0d0d0;}
+      .spec.model{background:#faf6ec;border:1px solid #f1e8d1;}
+      .table.table-bordered{background:#fff}
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+    <script src="./swagger-page.js"></script>
+    <script>
+      window.onload = function () {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'http://petstore.swagger.io/v2/swagger.json');
+        xhr.onload= function(e) {
+          if (this.status == 200) {
+            var swaggerPage = new SwaggerPage({json_text: this.response});
+            _.each(['toc_apis', 'toc_models', 'spec_apis', 'spec_models'], function(i) {
+              document.getElementById(i).innerHTML = swaggerPage.renderHTML(i);
+            });
+          }
+        };
+        xhr.send();
+      };
+    </script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="apis">
+            <h2>API list</h2>
+            <div id="toc_apis"></div>
+          </div>
+          <div class="models">
+            <h2>Model list</h2>
+            <div id="toc_models"></div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div id="spec_apis"></div>
+          <div id="spec_models"></div>
+        </div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://www.atlasestateagents.co.uk/javascript/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+  </body>
+</html>
