@@ -14,6 +14,7 @@
  * - example w/ curl
  * - suppress in case of empty list
  * - Validation for JSON
+ * - support basePath
  */
 
 SwaggerPage = function(params) {
@@ -38,10 +39,9 @@ SwaggerPage.prototype.JSONfy = function(json_or_string) {
 };
 
 SwaggerPage.prototype.endpoint_prefix = function(swaggerObj) {
-	var scheme   = swaggerObj.schemes[0]; // NOTE: Could I fixed needle??
-	var host     = swaggerObj.host;
 	var basepath = swaggerObj.basePath || "";
-	return scheme + '://' + host + basepath;
+	var url = location.protocol+'//'+location.hostname+(location.port ? ':' + location.port : '') + basepath;
+	return url;
 };
 
 SwaggerPage.prototype.extractPaths = function(swagger_paths, endpoint_prefix) {
@@ -145,8 +145,6 @@ Handlebars.registerHelper('tp', function(type, ref) {
 });
 
 Handlebars.registerHelper('curl', function(obj) {
-	console.debug(obj);
-
 	var headers = _.map(obj.spec.headers, function(v, k) {
 		if (v.required == true) {
 			v["name"] = k;
