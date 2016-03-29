@@ -145,12 +145,46 @@ Handlebars.registerHelper('tp', function(type, ref) {
 });
 
 Handlebars.registerHelper('curl', function(obj) {
-	//console.debug(obj);
-	r = '';
-	r += 'curl -w "\\n" -X ' + obj.method.toUpperCase();
-	r += ' ' + obj.endpoint_prefix + obj.path;
-	r += ' (WIP (^^;))';
-	return new Handlebars.SafeString(r);
+	console.debug(obj);
+
+	var headers = _.map(obj.spec.headers, function(v, k) {
+		if (v.required == true) {
+			v["name"] = k;
+			return v;
+		} else {
+			return null;
+		}
+	});
+
+	// NOTE: `in` is query in DELETE method, maybe BUG!!
+	var params = _.filter(obj.spec.parameters, function(i) {
+		return (i.in == "formData" && i.required == true);
+	});
+
+	var qs = _.filter(obj.spec.parameters, function(i) {
+		return (i.in == "query" && i.required == true);
+	});
+
+	r = [];
+	r.push('curl', '-w', '"\\n"');
+	_.each(headers, function(i) {
+		if (i) { r.push('-H', '"'+ i.name+': VALUE"'); }
+	});
+	_.each(params, function(i) {
+		if (i) { r.push('-d', '"'+ i.name+'=VALUE"'); }
+	});
+	r.push('\\', '\n', '-X', obj.method.toUpperCase(), obj.endpoint_prefix + obj.path);
+	if (qs.length > 0) {
+		var q = [];
+		_.each(qs, function(i) {
+			if (i) { q.push(i.name+'=VALUE'); }
+		});
+		var querystring = '?'+q.join('&');
+	} else {
+		var querystring = '';
+	}
+
+	return new Handlebars.SafeString(r.join(' ')+querystring);
 });
 
 SwaggerPage.prototype.tpl_toc_apis = '\
