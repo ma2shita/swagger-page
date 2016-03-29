@@ -5,7 +5,7 @@
 //   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
 //   <script src="swagger-page.js"></script>
 //   <script>
-//     var swaggerPage = new SwaggerPage({json_text: Swagger2.0APIJSONtext});
+//     var swaggerPage = new SwaggerPage({src: Swagger2.0APIJSON_or_String});
 //     document.getElementById('target').innerHTML = swaggerPage.renderHTML('toc_apis');
 //   </script>
 
@@ -13,18 +13,28 @@
  * TODO:
  * - example w/ curl
  * - suppress in case of empty list
+ * - Validation for JSON
  */
 
 SwaggerPage = function(params) {
 	// params
-	//   .json_text = src text as JSON
-	this.swaggerObj = this.convertJSON(params.json_text);
+	//   .src = source text(as JSON) or JSON
+	this.swaggerObj = this.JSONfy(params.src);
 	this.apis = this.extractPaths(this.swaggerObj.paths, this.endpoint_prefix(this.swaggerObj));
 	this.models = this.extractDefinitions(this.swaggerObj.definitions);
 };
 
-SwaggerPage.prototype.convertJSON = function(json_text) {
-	return (new Function('return ' + json_text))(); // REF: http://hamalog.tumblr.com/post/4047826621/json%E3%82%89%E3%81%97%E3%81%8D%E6%96%87%E5%AD%97%E5%88%97%E3%82%92%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%AB%E5%A4%89%E6%8F%9B%E3%81%99%E3%82%8Bjavascript
+SwaggerPage.prototype.isJSON = function(target) {
+	var r = Object.prototype.toString.call(target);
+	return (r == '[object Object]' || r == '[object JSON]');
+};
+
+SwaggerPage.prototype.JSONfy = function(json_or_string) {
+	if (this.isJSON(json_or_string)) {
+		return json_or_string;
+	} else {
+		return (new Function('return ' + json_or_string))(); // REF: http://hamalog.tumblr.com/post/4047826621/json%E3%82%89%E3%81%97%E3%81%8D%E6%96%87%E5%AD%97%E5%88%97%E3%82%92%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%AB%E5%A4%89%E6%8F%9B%E3%81%99%E3%82%8Bjavascript
+	}
 };
 
 SwaggerPage.prototype.endpoint_prefix = function(swaggerObj) {

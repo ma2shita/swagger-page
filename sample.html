@@ -28,7 +28,7 @@
         xhr.open('GET', 'http://petstore.swagger.io/v2/swagger.json');
         xhr.onload= function(e) {
           if (this.status == 200) {
-            var swaggerPage = new SwaggerPage({json_text: this.response});
+            var swaggerPage = new SwaggerPage({src: this.response});
             _.each(['toc_apis', 'toc_models', 'spec_apis', 'spec_models'], function(i) {
               document.getElementById(i).innerHTML = swaggerPage.renderHTML(i);
             });
