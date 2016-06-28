@@ -225,7 +225,7 @@ SwaggerPage.prototype.tpl_spec_api = '\
 	  {{#each spec.headers}}\
       <tr>\
         <td class="header">{{@key}}</td>\
-        <td class="desc">{{description}}</td>\
+        <td class="desc">{{mkd description}}</td>\
         <td class="required">{{required}}</td>\
       </tr>\
 	  {{/each}}\
@@ -248,7 +248,7 @@ SwaggerPage.prototype.tpl_spec_api = '\
         <td class="name">{{name}}</td>\
         <td class="desc">\
 		  Parameter to be set in {{in}}<br />\
-          {{description}}\
+          {{mkd description}}\
         </td>\
         <td class="type">{{type}}</td>\
         <td class="required">{{required}}</td>\
@@ -270,7 +270,7 @@ SwaggerPage.prototype.tpl_spec_api = '\
 	  {{#each spec.responses}}\
       <tr>\
         <td class="code">{{@key}}</td>\
-        <td class="desc">{{description}}</td>\
+        <td class="desc">{{mkd description}}</td>\
         <td class="type">{{model_link schema.$ref}}</td>\
       </tr>\
 	  {{/each}}\
@@ -298,7 +298,7 @@ SwaggerPage.prototype.tpl_spec_model = '\
 	  {{#each properties}}\
       <tr>\
         <td class="name">{{@key}}</td>\
-        <td class="desc">{{description}}</td>\
+        <td class="desc">{{mkd description}}</td>\
         <td class="type">{{tp type $ref}}</td>\
       </tr>\
 	  {{/each}}\
